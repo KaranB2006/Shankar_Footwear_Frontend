@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ function AdminLogin() {
     e.preventDefault();
 
     // Static admin credentials (for now)
-    if (email === "admin@shop.com" && password === "admin123") {
+    if (email === "shankar@footwear.com" && password === "Shankar@123#") {
       localStorage.setItem("adminLoggedIn", "true");
       navigate("/admin");
     } else {
@@ -18,8 +19,11 @@ function AdminLogin() {
     }
   };
 
-  return (
+  return ( 
     <div className="container mt-5">
+      <Helmet>
+        <title>Admin Login - Footwear Store</title>
+      </Helmet>
       <h2>🔐 Admin Login</h2>
       <form onSubmit={handleLogin} className="w-50 mx-auto mt-4">
         <div className="mb-3">

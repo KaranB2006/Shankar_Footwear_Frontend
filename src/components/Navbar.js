@@ -2,18 +2,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import LogoutButton from "../components/LogoutButton";
-
-function Products() {
-  return (
-    <div>
-      <h2>All Products</h2>
-      <LogoutButton />
-      {/* Rest of your product list */}
-    </div>
-  );
-}
-
 
 function Navbar() {
   const location = useLocation();
@@ -43,20 +31,24 @@ function Navbar() {
 
   return (
     <motion.nav
-      className="navbar navbar-expand-lg navbar-dark bg-dark px-4"
+      className="navbar navbar-expand-lg navbar-dark bg-dark px-4 shadow sticky-top"
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.5 }}
     >
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand fw-semibold fs-4" to="/">
           👟 Footwear Store
         </Link>
+
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -84,8 +76,6 @@ function Navbar() {
                 Checkout
               </Link>
             </li>
-
-            {/* ✅ Always show Admin login link */}
             {!isAdmin ? (
               <li className="nav-item">
                 <Link className={linkClass("/admin-login")} to="/admin-login">
@@ -118,16 +108,15 @@ function Navbar() {
               </>
             ) : (
               <li className="nav-item">
-                <button className="btn btn-outline-light" onClick={handleLogout}>
+                <button className="btn btn-outline-light ms-lg-2" onClick={handleLogout}>
                   Logout
                 </button>
               </li>
             )}
 
-            {/* ✅ Show admin logout if logged in */}
             {isAdmin && (
-              <li className="nav-item ms-2">
-                <button className="btn btn-outline-warning" onClick={handleAdminLogout}>
+              <li className="nav-item">
+                <button className="btn btn-outline-warning ms-lg-2" onClick={handleAdminLogout}>
                   Admin Logout
                 </button>
               </li>

@@ -1,7 +1,7 @@
 // src/api/cart.js
 
 export const addToCart = async (productId, quantity) => {
-  const res = await fetch("http://localhost:8080/Footwear_Backend/CartServlet", {
+  const res = await fetch("	https://shankar-footwear.onrender.com/CartServlet", {
     method: "POST",
     credentials: "include", 
     headers: {

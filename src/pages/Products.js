@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRightCircle } from "lucide-react";
 import Swal from 'sweetalert2';
+import { Helmet } from "react-helmet";
 
 
 
@@ -60,12 +61,20 @@ function Products() {
   ];
 
   const handleAdd = async (product) => {
-  addToCart(product);
+  if (!userEmail) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Please Login First',
+      text: 'You must be logged in to add products to your cart.',
+    });
+    return; 
+  }
 
   try {
-    await addToCartAPI(product.id, 1);
-    
-    // 🎉 SweetAlert success popup
+    await addToCartAPI(product.id, 1); // Backend add
+
+    addToCart(product); // ✅ Add to frontend cart after backend success
+
     Swal.fire({
       icon: 'success',
       title: 'Added to Cart',
@@ -76,18 +85,21 @@ function Products() {
   } catch (err) {
     console.log("Backend error:", err);
 
-    // ❌ SweetAlert error popup
     Swal.fire({
       icon: 'error',
-      title: 'Oops!',
-      text: 'Something went wrong while syncing with the backend.',
+      title: 'Error',
+      text: 'Something went wrong while adding to cart.',
     });
   }
 };
 
 
+
   return (
     <div className="container mt-5">
+      <Helmet>
+              <title>Products</title>
+      </Helmet>
       <h2 className="mb-4">🛍️ Featured Products</h2>
       <div className="row">
         {products.map((product) => (

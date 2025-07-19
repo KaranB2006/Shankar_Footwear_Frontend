@@ -1,6 +1,7 @@
 // src/pages/Men.js
 import React from "react";
 import { useCart } from "../context/CartContext";
+import { Helmet } from "react-helmet";
 
 export default function Men() {
   const { addToCart } = useCart();
@@ -38,6 +39,9 @@ export default function Men() {
 
   return (
     <div className="container mt-5">
+      <Helmet>
+        <title>Mens Section💪</title>
+      </Helmet>
       <h2 className="text-center mb-4">🧍‍♂️ Men's Section</h2>
       <div className="row">
         {Mens_Products.map((product) => (

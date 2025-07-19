@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { signupUser } from "../api/auth";
+import { Helmet } from "react-helmet";
 
 
 function Signup() {
@@ -40,6 +41,9 @@ function Signup() {
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <Helmet>
+              <title>Sign Up User</title>
+            </Helmet>
       <motion.div
         className="p-5 rounded shadow bg-white"
         initial={{ opacity: 0, scale: 0.9 }}

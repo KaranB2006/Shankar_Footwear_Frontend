@@ -2,6 +2,7 @@ import React from "react";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet";
 
 function Cart() {
   const navigate = useNavigate();
@@ -10,6 +11,9 @@ function Cart() {
 
   return (
     <div className="container mt-5">
+      <Helmet>
+          <title>Cart</title>
+      </Helmet>
       <h2>Your Cart</h2>
       {cartItems.length === 0 ? (
         <p>No items in cart</p>

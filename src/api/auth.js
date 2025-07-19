@@ -1,7 +1,7 @@
 // src/api/auth.js
 
 export const signupUser = async (name, email, password) => {
-  const res = await fetch("http://localhost:8080/Footwear_Backend/SignupServlet", {
+  const res = await fetch("https://shankar-footwear.onrender.com/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -19,7 +19,7 @@ export const signupUser = async (name, email, password) => {
 
 
 export const loginUser = async (email, password) => {
-  const res = await fetch("http://localhost:8080/Footwear_Backend/LoginServlet", {
+  const res = await fetch("http://localhost:8080/LoginServlet", {
     method: "POST",
     credentials: 'include',
     headers: {

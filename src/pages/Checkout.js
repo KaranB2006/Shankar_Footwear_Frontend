@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { Helmet } from "react-helmet";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ function Checkout() {
     }
 
     try {
-      const res = await fetch("http://localhost:8080/Footwear_Backend/CreateOrderServlet", {
+      const res = await fetch("https://shankar-footwear.onrender.com/CheckoutServlet", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,6 +107,9 @@ function Checkout() {
 
   return (
     <div className="container mt-5">
+      <Helmet>
+                    <title>Checkout</title>
+            </Helmet>
       <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
         🧾 Checkout
       </motion.h2>

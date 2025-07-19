@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 function AdminPanel() {
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ function AdminPanel() {
 
   return (
     <div className="container mt-5">
+      <Helmet>
+          <title>Admin Logged in - Footwear Store</title>
+      </Helmet>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>🛠️ Admin Panel</h2>
         <button className="btn btn-danger" onClick={handleLogout}>
