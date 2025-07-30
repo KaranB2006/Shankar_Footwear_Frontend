@@ -1,7 +1,8 @@
 // src/api/auth.js
+const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const signupUser = async (name, email, password) => {
-  const res = await fetch("https://shankar-footwear.onrender.com/signup", {
+  const res = await fetch(`${BASE_URL}/SignupServlet`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -19,7 +20,7 @@ export const signupUser = async (name, email, password) => {
 
 
 export const loginUser = async (email, password) => {
-  const res = await fetch("http://localhost:8080/LoginServlet", {
+  const res = await fetch(`${BASE_URL}/LoginServlet`, {
     method: "POST",
     credentials: 'include',
     headers: {
