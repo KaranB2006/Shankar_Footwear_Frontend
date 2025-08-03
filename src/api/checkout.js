@@ -2,7 +2,7 @@
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const checkoutOrder = async (email) => {
-  const res = await fetch(`${BASE_URL}/CheckoutServlet`, {
+  const res = await fetch(`${BASE_URL}CheckoutServlet`, {
     method: "POST",
     credentials: "include", 
     headers: {

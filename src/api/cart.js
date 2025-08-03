@@ -2,7 +2,7 @@
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const addToCart = async (productId, quantity) => {
-  const res = await fetch(`${BASE_URL}/CartServlet`, {
+  const res = await fetch(`${BASE_URL}CartServlet`, {
     method: "POST",
     credentials: "include", 
     headers: {
