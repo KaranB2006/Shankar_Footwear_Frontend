@@ -2,7 +2,7 @@
 const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export const signupUser = async (name, email, password) => {
-  const res = await fetch(`${BASE_URL}SignupServlet`, {
+  const res = await fetch(`https://shankar-footwear-backend.onrender.com/SignupServlet`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -20,7 +20,7 @@ export const signupUser = async (name, email, password) => {
 
 
 export const loginUser = async (email, password) => {
-  const res = await fetch(`${BASE_URL}LoginServlet`, {
+  const res = await fetch(`https://shankar-footwear-backend.onrender.com/LoginServlet`, {
     method: "POST",
     credentials: 'include',
     headers: {
