@@ -76,6 +76,11 @@ function Navbar() {
                 Checkout
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className={linkClass("/support")} to="/support">
+                Customer Support
+              </Link>
+            </li>
             {!isAdmin ? (
               <li className="nav-item">
                 <Link className={linkClass("/admin-login")} to="/admin-login">
@@ -108,7 +113,10 @@ function Navbar() {
               </>
             ) : (
               <li className="nav-item">
-                <button className="btn btn-outline-light ms-lg-2" onClick={handleLogout}>
+                <button
+                  className="btn btn-outline-light ms-lg-2"
+                  onClick={handleLogout}
+                >
                   Logout
                 </button>
               </li>
@@ -116,7 +124,10 @@ function Navbar() {
 
             {isAdmin && (
               <li className="nav-item">
-                <button className="btn btn-outline-warning ms-lg-2" onClick={handleAdminLogout}>
+                <button
+                  className="btn btn-outline-warning ms-lg-2"
+                  onClick={handleAdminLogout}
+                >
                   Admin Logout
                 </button>
               </li>
