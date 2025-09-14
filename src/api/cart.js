@@ -1,19 +1,23 @@
 // src/api/cart.js
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BASE_URL = "https://shankarfootwearbackend-production.up.railway.app";
 
+// --- Add to Cart ---
 export const addToCart = async (productId, quantity) => {
-  const res = await fetch(`${BASE_URL}CartServlet`, {
+  const res = await fetch(`${BASE_URL}/CartServlet`, {
     method: "POST",
-    credentials: "include", 
+    credentials: "include",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: new URLSearchParams({  
+    body: new URLSearchParams({
       productId,
-      quantity
-    })
+      quantity,
+    }),
   });
 
-  const data = await res.json();
-  return data;
+  if (!res.ok) {
+    throw new Error(`Add to cart failed: ${res.status}`);
+  }
+
+  return await res.json();
 };

@@ -1,37 +1,44 @@
 // src/api/auth.js
-const BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const BASE_URL = "https://shankarfootwearbackend-production.up.railway.app";
 
+// --- Signup ---
 export const signupUser = async (name, email, password) => {
-  const res = await fetch("https://shankar-footwear-backend.onrender.com/SignupServlet", {
+  const res = await fetch(`${BASE_URL}/SignupServlet`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
-      name: name,
-      email: email,
-      password: password,
+      name,
+      email,
+      password,
     }),
   });
 
-  const data = await res.json();
-  return data;
+  if (!res.ok) {
+    throw new Error(`Signup failed: ${res.status}`);
+  }
+
+  return await res.json();
 };
 
-
+// --- Login ---
 export const loginUser = async (email, password) => {
-  const res = await fetch("https://shankar-footwear-backend.onrender.com/LoginServlet", {
+  const res = await fetch(`${BASE_URL}/LoginServlet`, {
     method: "POST",
-    credentials: 'include',
+    credentials: "include",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: new URLSearchParams({
-      email: email,
-      password: password,
+      email,
+      password,
     }),
   });
 
-  const data = await res.json();
-  return data;
+  if (!res.ok) {
+    throw new Error(`Login failed: ${res.status}`);
+  }
+
+  return await res.json();
 };
