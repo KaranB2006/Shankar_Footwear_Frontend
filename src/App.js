@@ -19,7 +19,7 @@ import ProductDetails from "./components/ProductDetails";
 import CustomerSupport from "./pages/CustomerSupport";
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(false);
 
   useEffect(() => {
     document.body.classList.toggle("dark-mode", darkMode);
