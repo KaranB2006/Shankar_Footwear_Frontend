@@ -5,7 +5,6 @@ import { Helmet } from "react-helmet";
 
 export default function Men() {
   const { addToCart } = useCart();
-  const userEmail = localStorage.getItem("userEmail");
 
   const Mens_Products = [
     {
@@ -33,7 +32,6 @@ export default function Men() {
 
   const handleAdd = (product) => {
     addToCart(product);
-    // If you're syncing with backend, add API call here
     console.log("Added to cart:", product);
   };
 

@@ -1,5 +1,5 @@
 // src/api/auth.js
-const BASE_URL = "https://shankarfootwearbackend-production.up.railway.app";
+const BASE_URL = "http://localhost:8080/Footwear_local";
 
 // --- Signup ---
 export const signupUser = async (name, email, password) => {

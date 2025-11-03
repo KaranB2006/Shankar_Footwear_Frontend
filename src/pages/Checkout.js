@@ -1,160 +1,194 @@
-// src/pages/Checkout.js
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { Helmet } from "react-helmet";
 
 function Checkout() {
-  const navigate = useNavigate();
   const { totalAmount } = useCart();
   const userEmail = localStorage.getItem("userEmail");
 
   const [formData, setFormData] = useState({
     name: "",
+    phone: "",
     address: "",
     city: "",
-    pin: "",
-    phone: "",
+    state: "",
+    pincode: ""
   });
 
-  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const validate = () => {
-    const newErrors = {};
-    Object.entries(formData).forEach(([key, val]) => {
-      if (!val.trim()) newErrors[key] = `${key} is required`;
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const loadRazorpayScript = () =>
-    new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-
   const handleCheckout = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
 
-    const isLoaded = await loadRazorpayScript();
-    if (!isLoaded) {
-      alert("Razorpay SDK failed to load. Check your connection.");
+    // simple field validation
+    for (const field in formData) {
+      if (!formData[field]) {
+        alert(`Please fill ${field}`);
+        return;
+      }
+    }
+
+    if (!totalAmount || totalAmount <= 0) {
+      alert("❌ Invalid cart total. Please add products to your cart.");
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      const res = await fetch("https://shankar-footwear.onrender.com/CheckoutServlet", {
+      const amountString = totalAmount.toFixed(2);
+
+      const res = await fetch("http://localhost:8080/Footwear_local/CheckoutServlet", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: totalAmount * 100 }),
-      })
-      .then(res => res.json())
-  .then(data => {
-    console.log("Cashfree order:", data);
-  })
-  .catch(err=>{
-    console.log("error" , err);
-    
-  });
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          order_amount: amountString,
+          customer_id: "cust001",
+          customer_email: userEmail || "test@example.com",
+          customer_phone: formData.phone,
+          customer_name: formData.name,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          pincode: formData.pincode
+        }),
+      });
 
       const data = await res.json();
+      console.log("Backend response:", res.status, data);
 
-      if (!data || !data.id) {
-        alert("❌ Something went wrong during payment.");
-        return;
+      if (!res.ok) {
+        const msg = data?.message || data?.cashfree_response?.message || "Payment server error";
+        throw new Error(msg);
       }
 
-      const options = {
-        key: "rzp_test_4MtRTOydSnRadF", // Replace with your Razorpay Test key
-        amount: data.amount,
-        currency: "INR",
-        name: "Footwear Store",
-        description: "Payment",
-        order_id: data.id,
-        handler: function (response) {
-          alert("✅ Payment Successful! Payment ID: " + response.razorpay_payment_id);
-          navigate("/order-history"); // Redirect after payment
-        },
-        prefill: {
-          name: formData.name,
-          email: userEmail,
-          contact: formData.phone,
-        },
-        theme: {
-          color: "#0d6efd",
-        },
-      };
+      const sessionId = data.payment_session_id;
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      if (sessionId) {
+        setTimeout(() => {
+          if (window.Cashfree) {
+            const cashfree = window.Cashfree({
+              mode: "sandbox", // change to "production" when live
+            });
+
+            console.log("Using session ID to checkout:", sessionId);
+
+            cashfree.checkout({
+              paymentSessionId: sessionId,
+              redirectTarget: "_self",
+              returnUrl: "http://localhost:8080/Footwear_local/PaymentCallbackServlet?order_id={order_id}"
+            }).then((result) => {
+              if (result.error) alert("Error: " + result.error.message);
+              if (result.redirect) console.log("Redirecting to payment page...");
+            });
+
+          } else {
+            alert("Cashfree SDK not loaded. Please refresh the page.");
+          }
+        }, 500);
+      } else {
+        alert("❌ No payment session ID received. See console for details.");
+        console.error("Unexpected payment response:", data);
+      }
+
     } catch (err) {
-      console.log("Payment error:", err);
-      alert("❌ Something went wrong during payment.");
+      console.error("Checkout error:", err);
+      alert("❌ Payment failed. Please try again. " + err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="container mt-5">
-      <Helmet>
-                    <title>Checkout</title>
-            </Helmet>
-      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
-        🧾 Checkout
-      </motion.h2>
+      <h2>Checkout</h2>
+      <form onSubmit={handleCheckout}>
+        <div className="mb-3">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
 
-      <div className="row">
-        <motion.div className="col-md-6" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}>
-          <h4>Shipping Information</h4>
-          <form onSubmit={handleCheckout}>
-            {["name", "address", "city", "pin", "phone"].map((field) => (
-              <div className="mb-3" key={field}>
-                <label className="form-label text-capitalize">{field}</label>
-                <input
-                  type="text"
-                  name={field}
-                  className={`form-control ${errors[field] ? "is-invalid" : ""}`}
-                  value={formData[field]}
-                  onChange={handleChange}
-                />
-                {errors[field] && <div className="invalid-feedback">{errors[field]}</div>}
-              </div>
-            ))}
-            <button type="submit" className="btn btn-success">
-              Pay with Cashfree
-            </button>
-          </form>
-        </motion.div>
+        <div className="mb-3">
+          <label htmlFor="phone">Phone</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
 
-        <motion.div className="col-md-6" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}>
-          <h4>Order Summary</h4>
-          <ul className="list-group">
-            <li className="list-group-item d-flex justify-content-between">
-              <span>Subtotal</span>
-              <strong>₹{totalAmount}</strong>
-            </li>
-            <li className="list-group-item d-flex justify-content-between">
-              <span>Shipping</span>
-              <strong>₹0</strong>
-            </li>
-            <li className="list-group-item d-flex justify-content-between">
-              <span>Total</span>
-              <strong>₹{totalAmount}</strong>
-            </li>
-          </ul>
-        </motion.div>
-      </div>
+        <div className="mb-3">
+          <label htmlFor="address">Address</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="city">City</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="state">State</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="pincode">Pincode</label>
+          <input
+            type="text"
+            id="pincode"
+            name="pincode"
+            value={formData.pincode}
+            onChange={handleChange}
+            className="form-control"
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-success" disabled={isLoading}>
+          {isLoading ? "Processing..." : `Pay ₹${totalAmount.toFixed(2)}`}
+        </button>
+      </form>
     </div>
   );
 }

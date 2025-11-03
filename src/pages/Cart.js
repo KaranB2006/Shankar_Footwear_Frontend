@@ -12,7 +12,7 @@ function Cart() {
   return (
     <div className="container mt-5">
       <Helmet>
-          <title>Cart</title>
+        <title>Cart</title>
       </Helmet>
       <h2>Your Cart</h2>
       {cartItems.length === 0 ? (
@@ -26,17 +26,26 @@ function Cart() {
                   <h5>{item.name}</h5>
                   <p>₹{item.price}</p>
                   <div>
-                    <button className="btn btn-sm btn-secondary me-2" onClick={() => decreaseQty(item.id)}>
+                    <button
+                      className="btn btn-sm btn-secondary me-2"
+                      onClick={() => decreaseQty(item.id)}
+                    >
                       -
                     </button>
                     {item.quantity}
-                    <button className="btn btn-sm btn-secondary ms-2" onClick={() => increaseQty(item.id)}>
+                    <button
+                      className="btn btn-sm btn-secondary ms-2"
+                      onClick={() => increaseQty(item.id)}
+                    >
                       +
                     </button>
                   </div>
                 </div>
                 <div>
-                  <button className="btn btn-danger" onClick={() => removeFromCart(item.id)}>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => removeFromCart(item.id)}
+                  >
                     Remove
                   </button>
                 </div>
@@ -49,9 +58,8 @@ function Cart() {
             onClick={() => navigate("/checkout")}
             whileTap={{ scale: 0.95 }}
           >
-              Proceed to Checkout
-           </motion.button>
-
+            Proceed to Checkout
+          </motion.button>
         </>
       )}
     </div>

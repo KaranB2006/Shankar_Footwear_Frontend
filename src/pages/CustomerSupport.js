@@ -8,18 +8,53 @@ const CustomerSupport = () => {
     subject: "",
     message: "",
   });
-
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const GOOGLE_SHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyy3ObshHyU1MQnDl-JrWpKoaSR_ovykNKTsYB1hwQNqFOO3FeI-5JEXaz_5xgSWvlmCg/exec";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setError("");
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setError("Please fill all fields.");
+      return;
+    }
+    
+    try {
+      // 1. Define the payload. Keys MUST match e.parameter in Apps Script (Name, Email, etc.)
+      const payload = {
+        Name: formData.name, 
+        Email: formData.email,
+        Subject: formData.subject,
+        Message: formData.message,
+      };
+      
+      // 2. CRITICAL CORS FIX: Convert to URL-encoded parameters for a SIMPLE POST request
+      const params = new URLSearchParams(payload);
+
+      const resp = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
+        method: "POST",
+        body: params, // Sends data as application/x-www-form-urlencoded
+        // 3. CRITICAL: Do NOT include a 'headers' object with 'Content-Type: application/json'
+      });
+      
+      const data = await resp.json();
+      
+      if (data.result === "success") {
+        setSubmitted(true);
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        throw new Error(`Submission failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setError("There was an error submitting the form. Please try again.");
+    }
   };
 
   return (
@@ -30,7 +65,6 @@ const CustomerSupport = () => {
           We’re here to help! Fill out the form below or check our FAQs.
         </p>
 
-        {/* Contact Form */}
         <form style={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
@@ -70,38 +104,28 @@ const CustomerSupport = () => {
           <button type="submit" style={styles.button}>
             Submit
           </button>
+          {error && <p style={styles.error}>{error}</p>}
           {submitted && (
             <p style={styles.success}>✅ Thank you! Your message has been sent.</p>
           )}
         </form>
 
-        {/* FAQ Section */}
         <div style={styles.faq}>
           <h2>Frequently Asked Questions</h2>
           <div style={styles.faqItem}>
             <strong>Q: How long does shipping take?</strong>
-            <p>
-              A: Shipping usually takes 3-7 business days depending on your
-              location.
-            </p>
+            <p>A: Shipping usually takes 3-7 business days depending on your location.</p>
           </div>
           <div style={styles.faqItem}>
             <strong>Q: Can I return an item?</strong>
-            <p>
-              A: Yes! Returns are accepted within 2 days of delivery. Please
-              check our Returns Policy.
-            </p>
+            <p>A: Yes! Returns are accepted within 2 days of delivery. Please check our Returns Policy.</p>
           </div>
           <div style={styles.faqItem}>
             <strong>Q: How can I track my order?</strong>
-            <p>
-              A: You will receive a tracking link via email once your order is
-              shipped.
-            </p>
+            <p>A: You will receive a tracking link via email once your order is shipped.</p>
           </div>
         </div>
 
-        {/* Support Contact Info */}
         <div style={styles.contactInfo}>
           <h2>Other Ways to Contact Us</h2>
           <p>Email: support@shankarfootwear.com</p>
@@ -110,7 +134,6 @@ const CustomerSupport = () => {
         </div>
       </div>
 
-      {/* Footer Section */}
       <footer style={styles.footer}>
         <div style={styles.footerContainer}>
           <div style={styles.footerCol}>
@@ -141,7 +164,6 @@ const CustomerSupport = () => {
   );
 };
 
-// Inline styles
 const styles = {
   page: { display: "flex", flexDirection: "column", minHeight: "100vh" },
   container: { flex: 1, maxWidth: "800px", margin: "0 auto", padding: "2rem" },
@@ -159,6 +181,7 @@ const styles = {
     cursor: "pointer",
   },
   success: { color: "green", marginTop: "1rem" },
+  error: { color: "red", marginTop: "1rem" },
   faq: { marginTop: "3rem" },
   faqItem: { marginBottom: "1.5rem" },
   contactInfo: {

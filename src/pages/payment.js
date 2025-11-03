@@ -1,3 +1,4 @@
+// src/pages/Payment.js
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -9,49 +10,42 @@ function Payment() {
   useEffect(() => {
     const initiatePayment = async () => {
       try {
-        // Fetch Razorpay order from backend servlet
-        const res = await fetch("http://localhost:8080/footwear/CreateOrderServlet", {
+        // 🔗 Call your backend servlet running locally
+        const res = await fetch("http://localhost:8080/Footwear_local/CreateOrderServlet", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // send session cookie if any
           body: JSON.stringify({
-            amount: totalAmount,
-            currency: "INR",
+            order_amount: totalAmount,
+            order_currency: "INR",
           }),
         });
 
         const data = await res.json();
-        if (!data || !data.id) {
-           alert("❌ Failed to create Razorpay order.");
+
+        if (!data || !data.order_token) {
+          alert("❌ Failed to create Cashfree order.");
           return;
         }
 
-        const options = {
-          key: "YOUR_RAZORPAY_KEY_ID", // Replace with your Razorpay Test Key
-          amount: data.amount,
-          currency: data.currency,
-          name: "Footwear Store",
-          description: "Order Payment",
-          order_id: data.id,
-          handler: function (response) {
-            alert("✅ Payment successful!");
-            navigate("/order-success"); // or order-history
-          },
-          prefill: {
-            name: localStorage.getItem("username") || "Customer",
-            email: localStorage.getItem("userEmail") || "example@example.com",
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
+        // ✅ Initialize Cashfree
+        const cashfree = new window.Cashfree({ mode: "sandbox" }); // change to "production" later
 
-        const razor = new window.Razorpay(options);
-        razor.open();
+        cashfree.checkout({
+          orderToken: data.order_token,
+          onSuccess: (resData) => {
+            console.log("✅ Payment success:", resData);
+            alert("Payment successful!");
+            navigate("/order-success");
+          },
+          onFailure: (err) => {
+            console.error("❌ Payment failed:", err);
+            alert("Payment failed!");
+          },
+        });
       } catch (err) {
         console.error("Payment error:", err);
-        console.log("❌ Something went wrong during payment.");
+        alert("❌ Something went wrong during payment.");
       }
     };
 

@@ -1,4 +1,3 @@
-// src/context/CartContext.js
 import { createContext, useContext, useState } from "react";
 
 const CartContext = createContext();
@@ -11,36 +10,31 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     const exists = cartItems.find((item) => item.id === product.id);
     if (exists) {
-      setCartItems((items) =>
-        items.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         )
       );
     } else {
-      // Ensure price is stored as a number
-      setCartItems([
-        ...cartItems,
-        { ...product, price: Number(product.price), quantity: 1 },
-      ]);
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
 
-  const removeFromCart = (id) =>
-    setCartItems((items) => items.filter((item) => item.id !== id));
+  const removeFromCart = (id) => {
+    setCartItems(cartItems.filter((item) => item.id !== id));
+  };
 
   const increaseQty = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
+    setCartItems(
+      cartItems.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
   const decreaseQty = (id) => {
-    setCartItems((items) =>
-      items
+    setCartItems(
+      cartItems
         .map((item) =>
           item.id === id ? { ...item, quantity: item.quantity - 1 } : item
         )
@@ -48,9 +42,8 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Total should correctly calculate price * quantity as numbers
   const totalAmount = cartItems.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
@@ -69,4 +62,3 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
-

@@ -18,46 +18,144 @@ function Products() {
     {
       id: 1,
       name: "Paragon Double Sided Belt",
-      price: 432,
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLiE8XYmeTTiGM7TtvRw_y2DH2AEg1ncb3dw&s",
+      price: 400,
+      image: "/images/1st_sandal.jpeg",
     },
     {
       id: 2,
-      name: "PARAGON 8828",
-      price: 255,
+      name: "PARAGON PUK2227G GREY",
+      price: 400,
       image:
-        "https://ganjirmart.com/wp-content/uploads/2023/06/sli.-8828-1-scaled.jpg",
+        "/images/2n_sandal.jpeg",
     },
     {
       id: 3,
-      name: "Paragon Blot K1407G",
+      name: "PARAGON PUK2227G BROWN",
       price: 969,
       image:
-        "https://paragonfootwear.com/cdn/shop/files/8_71e8bca0-9018-4211-a746-439b8f30ceb8.jpg?v=1741864677&width=1920",
+        "/images/3rd_sandal.jpeg",
     },
     // Women's (next 3)
     {
       id: 4,
-      name: "Women's Paragon PU sole Sandal",
+      name: "Women's Aurish Flat Sandal",
       price: 229,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOB04cM26H5ivWRZCMWHRMPsf2KmCwqGxQgg&s",
+        "/images/ladies_first.jpeg",
     },
     {
       id: 5,
-      name: "Solea paragon footwear top",
+      name: "Wolkaroo Soft Cushion",
       price: 249,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPN-JUMSg63Rb1la56tZy0qDgBi1h7MHaMnQ&s",
+        "/images/ladies_second.jpeg",
     },
     {
       id: 6,
       name: "Paragon Comfortable Ladies Sandal",
+      price: 417,
+      image:
+        "/images/ladies_third.jpeg",
+    },
+    {
+      id: 7,
+      name: "Paragon K7015L Ladies Sandal",
       price: 450,
       image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8WwM1YvQimdT9Ui5n6zYwFwhuY0iamJDSDg&s",
+        "/images/ladies_third.jpeg",
     },
+    {
+      id: 8,
+      name: "Soft Shoes",
+      price: 450,
+      image:
+        "/images/shoes1.jpeg",
+    },
+    {
+      id: 9,
+      name: "SNEAKERS",
+      price: 650,
+      image:
+        "/images/shoes2.jpeg",
+    },
+    {
+      id: 10,
+      name: "TRENDY CANVAS LUXURY SHOES",
+      price: 950,
+      image:
+        "/images/shoes3.jpeg",
+    },
+    {
+      id: 11,
+      name: "Paragon K7007l Slippers",
+      price: 450,
+      image:
+        "/images/ladies_sixth.jpeg",
+    },
+    {
+      id: 12,
+      name: "Paragon EVK3418L Slippers",
+      price: 450,
+      image:
+        "/images/ladies_seventh.jpeg",
+    },
+    {
+      id: 13,
+      name: "Mens Cetrino Sneakers",
+      price: 849,
+      image:
+        "/images/shoes4.jpeg",
+    },
+    {
+      id: 14,
+      name: "BELLEGIRIAN SHOES",
+      price: 699,
+      image:
+        "/images/shoe5.jpeg",
+    },
+    {
+      id: 15,
+      name: "MENS HURRICANE RUNNING SHOES",
+      price: 999,
+      image:
+        "/images/shoe6.jpeg",
+    },
+    {
+      id: 16,
+      name: "MENS ASIAN WONDER SPORTS SHOES",
+      price: 1100,
+      image:
+        "/images/shoe7.jpeg",
+    },
+    {
+      id: 17,
+      name: "AVANT RUNNING SHOES",
+      price: 900,
+      image:
+        "/images/shoe8.jpeg",
+    },
+    {
+      id: 18,
+      name: "DEEP PEACOCK RUNNING SHOES",
+      price: 450,
+      image:
+        "/images/shoe9.jpeg",
+    },
+    {
+      id: 19,
+      name: "MENS FORMAL CENTRINO WITH SHOELASE",
+      price: 650,
+      image:
+        "/images/shoe10.jpeg",
+    },
+    {
+      id: 20,
+      name: "MENS HURRICANE RUNNING SHOES",
+      price: 550,
+      image:
+        "/images/shoe11.jpeg",
+    },
+
   ];
 
   const handleAdd = async (product) => {
